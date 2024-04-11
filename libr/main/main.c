@@ -63,6 +63,18 @@ R_API int r_main_version_print(const char *progname, int mode) {
 		pj_ki (pj, "minor", R2_VERSION_MINOR);
 		pj_ki (pj, "patch", R2_VERSION_MINOR);
 		pj_end (pj);
+    pj_ko (pj, "options");
+    // FIXME
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
+		pj_ks (pj, "asan", "yes");
+#endif
+#else
+#if defined(__SANITIZE_ADDRESS__) // gcc < 14
+		pj_ks (pj, "asan", "yes");
+#endif
+#endif
+		pj_end (pj);
 		pj_end (pj);
 		char *s = pj_drain (pj);
 		printf ("%s\n", s);
